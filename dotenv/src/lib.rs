@@ -159,7 +159,11 @@ pub fn from_filename_iter<P: AsRef<Path>>(filename: P) -> Result<Iter<File>> {
 /// dotenv::dotenv().ok();
 /// ```
 pub fn dotenv() -> Result<PathBuf> {
-    let (path, iter) = Finder::new().find()?;
+    let (path, iter) = Finder::new().find().map_err(|error| {
+        println!("oh no!");
+        error
+    })?;
+
     iter.load()?;
     Ok(path)
 }
